@@ -20,32 +20,32 @@ class AlienContact(BaseModel):
     duration_minutes: int = Field(..., ge=1, le=1440)
     witness_count: int = Field(..., ge=1, le=100)
     message_received: Optional[str] = Field(None, max_length=500)
-    is_verified: bool = False   
+    is_verified: bool = False
 
     @model_validator(mode="after")
-    def validate_rules(self):
+    def validate_rules(self) -> "AlienContact":
         if not self.contact_id.startswith("AC"):
             raise ValueError("Contact ID must start with 'AC'")
         if self.contact_type == ContactType.physical and not self.is_verified:
             raise ValueError("Physical contact must be verified")
-        if self.contact_type == ContactType.telepathic and self.witness_count < 3:
-            raise ValueError("Telepathic contact requires at least 3 witnesses")
+        if (self.contact_type == ContactType.telepathic
+                and self.witness_count < 3):
+            raise ValueError("Telepathic contact requires"
+                             "at least 3 witnesses")
         if self.signal_strength > 7.0 and not self.message_received:
             raise ValueError("Strong signals need message")
         return self
 
 
-def main():
+def main() -> None:
     print("Alien Contact Log Validation")
     print("=" * 40)
-
-    # ✅ Valid contact
     try:
         contact = AlienContact(
             contact_id="AC_2024_001",
             timestamp="2024-01-01T12:00:00",
             location="Area 51, Nevada",
-            contact_type="radio",
+            contact_type=ContactType.radio,
             signal_strength=8.5,
             duration_minutes=45,
             witness_count=5,
@@ -81,6 +81,7 @@ def main():
     except Exception as e:
         print("Expected validation error:")
         print(e.errors()[0]["msg"].replace('Value error, ', ''))
+
 
 if __name__ == "__main__":
     main()
