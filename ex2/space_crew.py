@@ -51,3 +51,85 @@ class SpaceMission(BaseModel):
         if not all(m.is_active for m in self.crew):
             raise ValueError("All crew members must be active")
         return self
+
+
+def main() -> None:
+    print("Space Mission Crew Validation")
+    print("=" * 40)
+    try:
+        mission = SpaceMission(
+            mission_id="M2024_MARS",
+            mission_name="Mars Colony Establishment",
+            destination="Mars",
+            launch_date="2024-06-01T08:00:00",
+            duration_days=900,
+            crew=[
+                CrewMember(
+                    member_id="CM001",
+                    name="Sarah Connor",
+                    rank="commander",
+                    age=45,
+                    specialization="Mission Command",
+                    years_experience=20
+                ),
+                CrewMember(
+                    member_id="CM002",
+                    name="John Smith",
+                    rank="lieutenant",
+                    age=35,
+                    specialization="Navigation",
+                    years_experience=10
+                ),
+                CrewMember(
+                    member_id="CM003",
+                    name="Alice Johnson",
+                    rank="officer",
+                    age=28,
+                    specialization="Engineering",
+                    years_experience=6
+                ),
+            ],
+            budget_millions=2500.0
+        )
+        print("Valid mission created:")
+        print(f"Mission: {mission.mission_name}")
+        print(f"ID: {mission.mission_id}")
+        print(f"Destination: {mission.destination}")
+        print(f"Duration: {mission.duration_days} days")
+        print(f"Budget: ${mission.budget_millions}M")
+        print(f"Crew size: {len(mission.crew)}")
+        print("Crew members:")
+        for member in mission.crew:
+            print(f"- {member.name} ({member.rank.value})"
+                  f" - {member.specialization}")
+    except Exception as e:
+        print("Unexpected error:", e)
+
+    print("\n" + "=" * 40)
+
+    try:
+        SpaceMission(
+            mission_id="M2024_BAD",
+            mission_name="Doomed Mission",
+            destination="Jupiter",
+            launch_date="2024-06-01T08:00:00",
+            duration_days=30,
+            crew=[
+                CrewMember(
+                    member_id="CM004",
+                    name="Bob Brown",
+                    rank="officer",
+                    age=25,
+                    specialization="Navigation",
+                    years_experience=2
+                ),
+            ],
+            budget_millions=500.0
+        )
+    except Exception as e:
+        print("Expected validation error:")
+        print(e.errors()[0]["msg"].replace("Value error, ", ""))
+
+
+if __name__ == "__main__":
+    main()
