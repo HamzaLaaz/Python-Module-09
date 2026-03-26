@@ -10,7 +10,7 @@ class SpaceStation(BaseModel):
     power_level: float = Field(..., ge=0.0, le=100.0)
     oxygen_level: float = Field(..., ge=0.0, le=100.0)
     last_maintenance: datetime
-    is_operational: bool = True
+    is_operational: bool = Field(default=True)
     notes: Optional[str] = Field(None, max_length=200)
 
 
@@ -44,9 +44,9 @@ def main() -> None:
         SpaceStation(
             station_id="BAD",
             name="Broken Station",
-            crew_size=50,  # invalid must be <= 20
-            power_level=120,
-            oxygen_level=50,
+            crew_size=25,  # invalid must be <= 20
+            power_level=85.0,
+            oxygen_level=50.0,
             last_maintenance="2024-01-01T12:00:00"
         )
 

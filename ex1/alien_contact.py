@@ -31,7 +31,7 @@ class AlienContact(BaseModel):
         if (self.contact_type == ContactType.telepathic
                 and self.witness_count < 3):
             raise ValueError("Telepathic contact requires"
-                             "at least 3 witnesses")
+                             " at least 3 witnesses")
         if self.signal_strength > 7.0 and not self.message_received:
             raise ValueError("Strong signals need message")
         return self
@@ -62,8 +62,7 @@ def main() -> None:
         print(f"Witnesses: {contact.witness_count}")
         print(f"Message: '{contact.message_received}'")
     except Exception as e:
-        print("Expected validation error:")
-        print(e.errors()[0]["msg"].replace('Value error, ', ''))
+        print("Unexpected error:", e)
 
     print("\n" + "=" * 40)
 
